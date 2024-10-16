@@ -43,7 +43,7 @@ psql -f employee_db.sql
 
 **NOTE**: Running the SQL file will clear the existing database and create a new one. Do **NOT** run this command if you already have a database set up.
 
-4. Update the database credentials in the `.env` file:
+4. Create a `.env` file in the root directory and add your postgres credentials in the file:
 
 ```bash
 USER=your_actual_user
