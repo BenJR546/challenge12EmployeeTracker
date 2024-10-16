@@ -1,15 +1,16 @@
-// Install required dependencies: inquirer, pg, console.table
-// npm install inquirer pg console.table
+// Install required dependencies: inquirer, pg, console.table, dotenv
+// npm install inquirer pg console.table dotenv
 
 const inquirer = require("inquirer");
 const { Client } = require("pg");
+require("dotenv").config();
 require("console.table");
 
 const client = new Client({
-    user: "postgres",
+    user: process.env.USER || "postgres",
     host: "localhost",
     database: "employee_db",
-    password: "password",
+    password: process.env.PASSWORD || "password",
     port: 5432,
 });
 
