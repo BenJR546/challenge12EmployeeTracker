@@ -96,3 +96,7 @@ Contributions are welcome! Please feel free to open a pull request or submit an 
 ## Contact
 
 If you have any questions or need assistance, please contact me [by email](mailto:benjrice546@gmail.com) or on my [GitHub profile](https://github.com/BenJR546).
+
+## Demo
+
+A demo of the application can be found [here](https://www.youtube.com/watch?v=WmGBCGRm5ns)
