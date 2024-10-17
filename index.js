@@ -7,10 +7,10 @@ require("dotenv").config();
 require("console.table");
 
 const client = new Client({
-    user: process.env.USER,
+    user: process.env.USER || "postgres",
     host: "localhost",
     database: "employee_db",
-    password: process.env.PASSWORD,
+    password: process.env.PASSWORD || "password",
     port: 5432,
 });
 
@@ -192,13 +192,15 @@ const addRole = async () => {
 
 const addEmployee = async () => {
     try {
-        const rolesRes = await client.query("SELECT id, title FROM role");
+        const rolesRes = await client.query(
+            "SELECT role.id, role.title, department.name AS department FROM role JOIN department ON role.department_id = department.id"
+        );
         if (rolesRes.rows.length === 0) {
             console.log("No roles available. Please add a role first.");
             return;
         }
         const roleChoices = rolesRes.rows.map((role) => ({
-            name: role.title,
+            name: `${role.title} (${role.department})`,
             value: role.id,
         }));
         const employeesRes = await client.query(
