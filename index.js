@@ -7,10 +7,10 @@ require("dotenv").config();
 require("console.table");
 
 const client = new Client({
-    user: process.env.USER || "postgres",
+    user: process.env.USER,
     host: "localhost",
     database: "employee_db",
-    password: process.env.PASSWORD || "password",
+    password: process.env.PASSWORD,
     port: 5432,
 });
 
@@ -130,6 +130,16 @@ const addDepartment = async () => {
             name: "name",
             message: "Enter the department name:",
         });
+        const existingDepartment = await client.query(
+            "SELECT * FROM department WHERE name = $1",
+            [name]
+        );
+        if (existingDepartment.rows.length > 0) {
+            console.log(
+                "Department name already exists. Please enter a unique department name."
+            );
+            return await addDepartment();
+        }
         await client.query("INSERT INTO department (name) VALUES ($1)", [name]);
         console.log(`Added department: ${name}`);
     } catch (err) {
@@ -160,6 +170,16 @@ const addRole = async () => {
                 choices: departmentChoices,
             },
         ]);
+        const existingRole = await client.query(
+            "SELECT * FROM role WHERE title = $1 AND department_id = $2",
+            [title, department_id]
+        );
+        if (existingRole.rows.length > 0) {
+            console.log(
+                "Role title already exists in the selected department. Please enter a unique title for this department."
+            );
+            return await addRole();
+        }
         await client.query(
             "INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)",
             [title, salary, department_id]
@@ -227,13 +247,15 @@ const addEmployee = async () => {
 
 const addManager = async () => {
     try {
-        const rolesRes = await client.query("SELECT id, title FROM role");
+        const rolesRes = await client.query(
+            "SELECT role.id, role.title, department.name AS department FROM role JOIN department ON role.department_id = department.id"
+        );
         if (rolesRes.rows.length === 0) {
             console.log("No roles available. Please add a role first.");
             return;
         }
         const roleChoices = rolesRes.rows.map((role) => ({
-            name: role.title,
+            name: `${role.title} (${role.department})`,
             value: role.id,
         }));
         const { first_name, last_name, role_id } = await inquirer.prompt([

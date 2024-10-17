@@ -38,7 +38,14 @@ npm install
 3. Set up the database:
 
 ```bash
-psql -f employee_db.sql
+psql -U {your_user}
+```
+
+You will be prompted to enter the password for the postgres user, then:
+
+```bash
+\i employee_db.sql
+\q
 ```
 
 **NOTE**: Running the SQL file will clear the existing database and create a new one. Do **NOT** run this command if you already have a database set up.
